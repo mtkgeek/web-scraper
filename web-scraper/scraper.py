@@ -38,7 +38,7 @@ page = 'https://www.w3schools.com/python/python_intro.asp'
 
 # create empty lists to hold scraped pages and actual pages of the pdf document
 # to be printed out
-my_pages = []
+
 documents = []
 
 # loop through each page of the tutorial calling the already declared functions
@@ -47,16 +47,31 @@ while True:
     parent = get_page(page)
     get_next_page(parent)
     html = remove_unwanted(parent)
+
+    # create an html instance
     html_instance = HTML(string=html)
+    
+    # call weasyprint's render method on the html instance to obtain in 
+    # return an instance of the Document class which is stored in the doc object
     doc = html_instance.render()
-    my_pages.append(doc.pages)
+    
+    # append every consecutive doc object to the documents list
+    # that was created earlier.
     documents.append(doc)
+
+    # print the url of the current page to the console, this is solely
+    # for debugging and has no effect on the script
     print(page)
+    
+    # let the loop sleep for about 3secs before sending another request to
+    # to the server, this helps to prevent overloading the server from our end 
     time.sleep(3)
 
     # end loop when you get to your desired end-page
     if page == 'https://www.w3schools.com/python/python_mysql_getstarted.asp':
         break
+
+
 # your pages containing your desired tutorial content are placed in the all_pages list
 all_pages = [p for doc in documents for p in doc.pages]
 
